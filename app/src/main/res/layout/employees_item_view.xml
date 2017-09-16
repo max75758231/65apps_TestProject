@@ -41,7 +41,8 @@
         android:textColor="@color/colorBlack"
         android:text="@string/age"
         android:layout_below="@id/layout_item"
-        android:layout_toRightOf="@id/iv_employees_item"/>
+        android:layout_toRightOf="@id/iv_employees_item"
+        android:layout_marginRight="@dimen/spacing_tinier_8"/>
 
     <TextView
         android:id="@+id/tv_employees_item_age"

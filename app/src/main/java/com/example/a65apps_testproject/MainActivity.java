@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.a65apps_testproject.data.database.model.DBEmployeePlacement;
 import com.example.a65apps_testproject.data.database.model.DBSpecialtyModel;
 import com.example.a65apps_testproject.internet.InternetConnection;
 import com.example.a65apps_testproject.retrofit.adapter.SpecialtyAdapter;
@@ -31,8 +30,8 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int FIRST_VIEW_TOUCHED_ID = 100;
-    public static final int SECOND_VIEW_TOUCHED_ID = 101;
+    public static final int FIRST_SPEC_VIEW_TOUCHED_ID = 100;
+    public static final int SECOND_SPEC_VIEW_TOUCHED_ID = 101;
 
     private RecyclerView recyclerView;
     private DividerItemDecoration itemDecoration;
@@ -42,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private SpecialtyAdapter specialtyAdapter;
     private ApiService apiService;
 
-    private LinkedHashMap<Integer, String> map;
-    private ArrayList<String> specialties;
+    private LinkedHashMap<Integer, String> specsEliminationMap;
+    private ArrayList<String> specialtiesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
                 DividerItemDecoration.VERTICAL);
         apiService = RetrofitClient.getApiService();
 
-        map = new LinkedHashMap<>();
-        specialties = new ArrayList<>();
+        specsEliminationMap = new LinkedHashMap<>();
+        specialtiesList = new ArrayList<>();
 
         getData();
     }
@@ -74,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         if (InternetConnection.isNetworkAvailable(getApplication())) {
 
             DBSpecialtyModel.deleteAll(DBSpecialtyModel.class);
-            DBEmployeePlacement.deleteAll(DBEmployeePlacement.class);
 
             Call<ResponseData> call = apiService.getJSON();
             call.enqueue(new Callback<ResponseData>() {
@@ -82,20 +80,11 @@ public class MainActivity extends AppCompatActivity {
                 public void onResponse(Call<ResponseData> call, Response<ResponseData> response) {
                     allEmployeeList = response.body().getEmployees();
 
-                    for (Employee item : allEmployeeList) {
-                        DBEmployeePlacement placement =
-                                new DBEmployeePlacement(item.getName(),
-                                        item.getSurname(),
-                                        item.getBirthday(),
-                                        item.getImage());
-                        placement.save();
-                    }
-
-                    fillingMapBySpecs(allEmployeeList, map);
-                    fillingListBySpecs(map);
+                    fillingMapBySpecs(allEmployeeList, specsEliminationMap);
+                    fillingListBySpecs(specsEliminationMap);
                     fillingEmployeesArrayByOwnSpec(allEmployeeList);
 
-                    specialtyAdapter = new SpecialtyAdapter(getApplication(), specialties);
+                    specialtyAdapter = new SpecialtyAdapter(getApplication(), specialtiesList);
                     specialtyAdapter.setClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -120,10 +109,10 @@ public class MainActivity extends AppCompatActivity {
 
             List<DBSpecialtyModel> dbSpecialtyModels = DBSpecialtyModel.listAll(DBSpecialtyModel.class);
             for (DBSpecialtyModel item : dbSpecialtyModels) {
-                specialties.add(item.toString());
+                specialtiesList.add(item.toString());
             }
 
-            specialtyAdapter = new SpecialtyAdapter(getApplication(), specialties);
+            specialtyAdapter = new SpecialtyAdapter(getApplication(), specialtiesList);
             specialtyAdapter.setClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -159,17 +148,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Filling the map by specialties to find out all of them
-    private void fillingMapBySpecs(ArrayList<Employee> employee, LinkedHashMap<Integer, String> hashMap) {
+    private void fillingMapBySpecs(ArrayList<Employee> employee, LinkedHashMap<Integer, String> map) {
         for (Employee item : employee) {
             Integer key = item.getSpecialties().get(0).getSpecialtyId();
             String value = item.getSpecialties().get(0).getSpecialtyName();
-            hashMap.put(key, value);
+            map.put(key, value);
         }
     }
 
     private void fillingListBySpecs(LinkedHashMap<Integer, String> map) {
         for (Map.Entry<Integer, String> pair : map.entrySet()) {
-            specialties.add(pair.getValue());
+            specialtiesList.add(pair.getValue());
 
             savingInDbSpecList(pair.getValue());
         }
@@ -185,11 +174,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, EmployeesActivity.class);
         switch (itemView) {
             case 0:
-                intent.putExtra("touched_id", FIRST_VIEW_TOUCHED_ID);
+                intent.putExtra("touched_id", FIRST_SPEC_VIEW_TOUCHED_ID);
                 startActivity(intent);
                 break;
             case 1:
-                intent.putExtra("touched_id", SECOND_VIEW_TOUCHED_ID);
+                intent.putExtra("touched_id", SECOND_SPEC_VIEW_TOUCHED_ID);
                 startActivity(intent);
                 break;
         }

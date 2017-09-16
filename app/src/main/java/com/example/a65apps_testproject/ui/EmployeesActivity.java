@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.a65apps_testproject.R;
-import com.example.a65apps_testproject.data.database.model.DBEmployeeFirstModel;
-import com.example.a65apps_testproject.data.database.model.DBEmployeeSecondModel;
+import com.example.a65apps_testproject.data.database.model.DBEmployeeFirstSpecModel;
+import com.example.a65apps_testproject.data.database.model.DBEmployeeSecondSpecModel;
 import com.example.a65apps_testproject.data.database.model.DBSpecialtyModel;
 import com.example.a65apps_testproject.internet.InternetConnection;
 import com.example.a65apps_testproject.retrofit.adapter.EmployeeFirstSpecAdapter;
@@ -43,10 +43,10 @@ public class EmployeesActivity extends AppCompatActivity {
     private ArrayList<String> nameFirstList, surnameFirstList, birthdayFirstList, imageFirstList,
             nameSecondList, surnameSecondList, birthdaySecondList, imageSecondList;
 
-    List<DBEmployeeFirstModel> employeeFirstModels =
-            DBEmployeeFirstModel.listAll(DBEmployeeFirstModel.class);
-    List<DBEmployeeSecondModel> employeeSecondModels =
-            DBEmployeeSecondModel.listAll(DBEmployeeSecondModel.class);
+    List<DBEmployeeFirstSpecModel> dbEmployeeFirstSpecModels =
+            DBEmployeeFirstSpecModel.listAll(DBEmployeeFirstSpecModel.class);
+    List<DBEmployeeSecondSpecModel> dbEmployeeSecondSpecModels =
+            DBEmployeeSecondSpecModel.listAll(DBEmployeeSecondSpecModel.class);
 
 
     @Override
@@ -81,8 +81,8 @@ public class EmployeesActivity extends AppCompatActivity {
         if (InternetConnection.isNetworkAvailable(getApplication()))
         {
             //When online: Clean db's to save new data
-            DBEmployeeFirstModel.deleteAll(DBEmployeeFirstModel.class);
-            DBEmployeeSecondModel.deleteAll(DBEmployeeSecondModel.class);
+            DBEmployeeFirstSpecModel.deleteAll(DBEmployeeFirstSpecModel.class);
+            DBEmployeeSecondSpecModel.deleteAll(DBEmployeeSecondSpecModel.class);
 
             Call<ResponseData> call = apiService.getJSON();
             call.enqueue(new Callback<ResponseData>() {
@@ -130,7 +130,7 @@ public class EmployeesActivity extends AppCompatActivity {
             Intent intent = getIntent();
             Integer touchedId = intent.getIntExtra("touched_id", 0);
 
-            fillingListsByEmployeesSpecsOffline(employeeFirstModels, employeeSecondModels);
+            fillingListsByEmployeesSpecsOffline(dbEmployeeFirstSpecModels, dbEmployeeSecondSpecModels);
             setAdaptersByIntentHandling(touchedId);
         }
     }
@@ -145,7 +145,7 @@ public class EmployeesActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     int pos = recyclerView.indexOfChild(v);
-                    sendData(pos, nameFirstList, surnameFirstList,
+                    sendDataToDetailsActivity(pos, nameFirstList, surnameFirstList,
                             birthdayFirstList, imageFirstList, dbSpecialtyList.get(0).toString());
                 }
             });
@@ -155,7 +155,7 @@ public class EmployeesActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     int pos = recyclerView.indexOfChild(v);
-                    sendData(pos, nameSecondList, surnameSecondList,
+                    sendDataToDetailsActivity(pos, nameSecondList, surnameSecondList,
                             birthdaySecondList, imageSecondList, dbSpecialtyList.get(1).toString());
                 }
             });
@@ -164,9 +164,9 @@ public class EmployeesActivity extends AppCompatActivity {
     }
 
     //Sending info to details activity
-    private void sendData(int position, ArrayList<String> name, ArrayList<String> surname,
-                          ArrayList<String> birthday, ArrayList<String> image,
-                          String specialtyName) {
+    private void sendDataToDetailsActivity(int position, ArrayList<String> name,
+                                           ArrayList<String> surname, ArrayList<String> birthday,
+                                           ArrayList<String> image, String specialtyName) {
         Intent intent = new Intent(EmployeesActivity.this, EmployeesDetailsActivity.class);
 
         if (position < name.size()) {
@@ -190,8 +190,8 @@ public class EmployeesActivity extends AppCompatActivity {
             birthday = item.getBirthday();
             image = item.getImage();
 
-            DBEmployeeFirstModel employeeFirstModel =
-                    new DBEmployeeFirstModel(name, surname, birthday, image);
+            DBEmployeeFirstSpecModel employeeFirstModel =
+                    new DBEmployeeFirstSpecModel(name, surname, birthday, image);
             employeeFirstModel.save();
         }
 
@@ -201,8 +201,8 @@ public class EmployeesActivity extends AppCompatActivity {
             birthday = item.getBirthday();
             image = item.getImage();
 
-            DBEmployeeSecondModel employeeSecondModel =
-                    new DBEmployeeSecondModel(name, surname, birthday, image);
+            DBEmployeeSecondSpecModel employeeSecondModel =
+                    new DBEmployeeSecondSpecModel(name, surname, birthday, image);
             employeeSecondModel.save();
         }
     }
@@ -225,17 +225,17 @@ public class EmployeesActivity extends AppCompatActivity {
         }
     }
 
-    private void fillingListsByEmployeesSpecsOffline(List<DBEmployeeFirstModel> employeeFirstModels,
-                                                     List<DBEmployeeSecondModel> employeeSecondModels) {
+    private void fillingListsByEmployeesSpecsOffline(List<DBEmployeeFirstSpecModel> employeeFirstModels,
+                                                     List<DBEmployeeSecondSpecModel> employeeSecondModels) {
 
-        for (DBEmployeeFirstModel item : employeeFirstModels) {
+        for (DBEmployeeFirstSpecModel item : employeeFirstModels) {
             nameFirstList.add(item.name);
             surnameFirstList.add(item.surname);
             birthdayFirstList.add(item.birthday);
             imageFirstList.add(item.image);
         }
 
-        for (DBEmployeeSecondModel item : employeeSecondModels) {
+        for (DBEmployeeSecondSpecModel item : employeeSecondModels) {
             nameSecondList.add(item.name);
             surnameSecondList.add(item.surname);
             birthdaySecondList.add(item.birthday);

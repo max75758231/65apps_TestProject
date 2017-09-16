@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_margin_tiny">8dp</dimen>
+    <dimen name="activity_margin_normal">12dp</dimen>
+    <dimen name="activity_margin_large">16dp</dimen>
+
+    <!-- Font sizes -->
+    <dimen name="font_huger_48">48sp</dimen>
+    <dimen name="font_larger_24">24sp</dimen>
+    <dimen name="font_large_18">18sp</dimen>
+    <dimen name="font_normal_16">16sp</dimen>
+    <dimen name="font_standard_14">14sp</dimen>
+    <dimen name="font_tiny_12">12sp</dimen>
+    <dimen name="font_counter_10">10sp</dimen>
+    <dimen name="font_tiniest_8">8sp</dimen>
+
+    <!-- Image size -->
+    <dimen name="image_square_side_150">150dp</dimen>
+
+    <!-- Typical spacing -->
+    <dimen name="spacing_hugest_72">72dp</dimen>
+    <dimen name="spacing_huger_64">64dp</dimen>
+    <dimen name="spacing_huge_56">56dp</dimen>
+    <dimen name="spacing_larger_48">48dp</dimen>
+    <dimen name="spacing_large_40">40dp</dimen>
+    <dimen name="spacing_normal_32">32dp</dimen>
+    <dimen name="spacing_small_24">24dp</dimen>
+    <dimen name="spacing_tiny_16">16dp</dimen>
+    <dimen name="spacing_tinier_8">8dp</dimen>
+    <dimen name="spacing_tiniest_4">4dp</dimen>
+</resources>

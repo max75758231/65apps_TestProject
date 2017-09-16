@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/activity_margin_tiny">
+
+    <TextView
+        android:id="@+id/tv_specialty_item"
+        android:text="Specialty"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/font_larger_24"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
